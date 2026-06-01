@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Market Analytics Pipeline - Dashboard</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #e2e8f0; padding: 40px; }
+.container { max-width: 1100px; margin: 0 auto; }
+h1 { font-size: 28px; color: #38bdf8; margin-bottom: 8px; }
+.subtitle { color: #94a3b8; font-size: 14px; margin-bottom: 32px; }
+h2 { font-size: 18px; color: #f1f5f9; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #1e293b; }
+.card { background: #1e293b; border-radius: 12px; padding: 24px; margin-bottom: 24px; border: 1px solid #334155; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+.stat { text-align: center; padding: 16px; background: #0f172a; border-radius: 8px; }
+.stat-value { font-size: 28px; font-weight: 700; color: #38bdf8; }
+.stat-label { font-size: 12px; color: #94a3b8; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 8px 12px; color: #94a3b8; border-bottom: 1px solid #334155; font-weight: 600; }
+td { padding: 8px 12px; border-bottom: 1px solid #1e293b; }
+.bar-container { display: flex; align-items: center; gap: 8px; }
+.bar { height: 18px; border-radius: 4px; background: #2563eb; min-width: 4px; }
+.bar-label { min-width: 60px; font-size: 12px; color: #94a3b8; }
+.pipeline { display: flex; gap: 8px; margin: 24px 0; flex-wrap: wrap; justify-content: center; }
+.pipeline-step { background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 12px 16px; text-align: center; min-width: 120px; }
+.pipeline-step .step-num { font-size: 11px; color: #64748b; }
+.pipeline-step .step-name { font-size: 13px; font-weight: 600; color: #e2e8f0; margin-top: 4px; }
+.pipeline-step .step-count { font-size: 11px; color: #38bdf8; margin-top: 2px; }
+.arrow { color: #475569; font-size: 18px; align-self: center; }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+.tag-green { background: #064e3b; color: #6ee7b7; }
+.tag-blue { background: #1e3a5f; color: #93c5fd; }
+.tag-yellow { background: #422006; color: #fde68a; }
+.tag-purple { background: #3b0764; color: #d8b4fe; }
+.flex-col { display: flex; flex-direction: column; gap: 6px; }
+.issues li { padding: 6px 0; color: #fca5a5; font-size: 13px; }
+.skill-bar { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+.skill-bar .skill-name { width: 120px; font-size: 12px; text-align: right; }
+.skill-bar .skill-track { flex: 1; height: 14px; background: #0f172a; border-radius: 7px; overflow: hidden; }
+.skill-bar .skill-fill { height: 100%; border-radius: 7px; background: linear-gradient(90deg, #2563eb, #38bdf8); }
+.skill-bar .skill-count { width: 40px; font-size: 12px; color: #94a3b8; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Job Market Analytics Pipeline</h1>
+  <p class="subtitle">Assignment 3 - Data Pipeline with Extraction, Cleaning, Orchestration &amp; Notification</p>
+
+  <!-- Pipeline Architecture -->
+  <div class="card">
+    <h2>Pipeline Architecture</h2>
+    <div class="pipeline">
+      <div class="pipeline-step">
+        <div class="step-num">STEP 1-4</div>
+        <div class="step-name">Extract</div>
+        <div class="step-count">4 API Sources</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="pipeline-step">
+        <div class="step-num">STEP 5</div>
+        <div class="step-name">Merge</div>
+        <div class="step-count">Standardize Schema</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="pipeline-step">
+        <div class="step-num">STEP 6</div>
+        <div class="step-name">KNIME Clean</div>
+        <div class="step-count">Dedup + Filter</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="pipeline-step">
+        <div class="step-num">STEP 7</div>
+        <div class="step-name">Validate</div>
+        <div class="step-count">12 Quality Checks</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="pipeline-step">
+        <div class="step-num">STEP 8</div>
+        <div class="step-name">Analyze</div>
+        <div class="step-count">15 Metrics</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="pipeline-step">
+        <div class="step-num">STEP 9</div>
+        <div class="step-name">n8n Notify</div>
+        <div class="step-count">Webhook Alert</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="pipeline-step">
+        <div class="step-num">STEP 10</div>
+        <div class="step-name">Archive</div>
+        <div class="step-count">Versioned Snapshots</div>
+      </div>
+    </div>
+    <div style="margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
+      <span class="tag tag-green">Airflow Orchestration</span>
+      <span class="tag tag-blue">Parallel Extraction</span>
+      <span class="tag tag-yellow">KNIME Desktop Cleaning</span>
+      <span class="tag tag-purple">n8n Slack/Email Notify</span>
+    </div>
+  </div>
+
+  <!-- Key Stats -->
+  <div class="card">
+    <h2>Pipeline Summary</h2>
+    <div class="grid">
+      <div class="stat"><div class="stat-value">2,351</div><div class="stat-label">Raw Jobs Extracted</div></div>
+      <div class="stat"><div class="stat-value">1,242</div><div class="stat-label">Clean AI/ML/Data Jobs</div></div>
+      <div class="stat"><div class="stat-value">$113K</div><div class="stat-label">Avg Salary (USD)</div></div>
+      <div class="stat"><div class="stat-value">74</div><div class="stat-label">Entry-Level Jobs (0-1yr)</div></div>
+      <div class="stat"><div class="stat-value">4</div><div class="stat-label">API Sources</div></div>
+      <div class="stat"><div class="stat-value">100%</div><div class="stat-label">Remote Jobs</div></div>
+    </div>
+  </div>
+
+  <!-- Source Distribution -->
+  <div class="card">
+    <h2>Raw Jobs by Source</h2>
+    <table>
+      <tr><th>Source</th><th>Raw Count</th><th>After Clean</th><th>Retention</th></tr>
+      <tr><td>Arbeitnow</td><td>1,000</td><td>983</td><td>98.3%</td></tr>
+      <tr><td>RemoteJobs.org</td><td>1,160</td><td>79</td><td>6.8%</td></tr>
+      <tr><td>RemoteOK</td><td>99</td><td>88</td><td>88.9%</td></tr>
+      <tr><td>Himalayas</td><td>92</td><td>92</td><td>100%</td></tr>
+    </table>
+  </div>
+
+  <!-- Experience Brackets -->
+  <div class="card">
+    <h2>Experience Distribution</h2>
+    <div class="flex-col">
+      <div class="bar-container"><span class="bar-label">Not mentioned</span><div class="bar" style="width:65.6%;background:#475569;"></div><span>815 (65.6%)</span></div>
+      <div class="bar-container"><span class="bar-label">8+ years</span><div class="bar" style="width:16.7%;background:#2563eb;"></div><span>207 (16.7%)</span></div>
+      <div class="bar-container"><span class="bar-label">5-8 years</span><div class="bar" style="width:6.4%;background:#3b82f6;"></div><span>80 (6.4%)</span></div>
+      <div class="bar-container"><span class="bar-label">0-1 years</span><div class="bar" style="width:6.0%;background:#60a5fa;"></div><span>74 (6.0%)</span></div>
+      <div class="bar-container"><span class="bar-label">3-5 years</span><div class="bar" style="width:4.6%;background:#93c5fd;"></div><span>57 (4.6%)</span></div>
+      <div class="bar-container"><span class="bar-label">1-3 years</span><div class="bar" style="width:0.7%;background:#bfdbfe;"></div><span>9 (0.7%)</span></div>
+    </div>
+  </div>
+
+  <!-- Job Categories -->
+  <div class="card">
+    <h2>Job Categories</h2>
+    <div class="flex-col">
+      <div class="bar-container"><span class="bar-label">Other Data</span><div class="bar" style="width:44.8%;background:#8b5cf6;"></div><span>556 (44.8%)</span></div>
+      <div class="bar-container"><span class="bar-label">Data Engineering</span><div class="bar" style="width:39.9%;background:#7c3aed;"></div><span>495 (39.9%)</span></div>
+      <div class="bar-container"><span class="bar-label">Data Analytics</span><div class="bar" style="width:7.9%;background:#a78bfa;"></div><span>98 (7.9%)</span></div>
+      <div class="bar-container"><span class="bar-label">AI/ML</span><div class="bar" style="width:3.5%;background:#c4b5fd;"></div><span>44 (3.5%)</span></div>
+      <div class="bar-container"><span class="bar-label">Data Science</span><div class="bar" style="width:3.0%;background:#ddd6fe;"></div><span>37 (3.0%)</span></div>
+      <div class="bar-container"><span class="bar-label">BI / Analytics Eng</span><div class="bar" style="width:1.0%;background:#ede9fe;"></div><span>12 (1.0%)</span></div>
+    </div>
+  </div>
+
+  <!-- Average Salary by Category -->
+  <div class="card">
+    <h2>Average Salary by Category</h2>
+    <div class="flex-col">
+      <div class="bar-container"><span class="bar-label">Data Engineering</span><div class="bar" style="width:100%;background:#059669;"></div><span>$164,750</span></div>
+      <div class="bar-container"><span class="bar-label">Data Analytics</span><div class="bar" style="width:88.5%;background:#10b981;"></div><span>$145,744</span></div>
+      <div class="bar-container"><span class="bar-label">Data Science</span><div class="bar" style="width:82.3%;background:#34d399;"></div><span>$135,550</span></div>
+      <div class="bar-container"><span class="bar-label">AI/ML</span><div class="bar" style="width:73.4%;background:#6ee7b7;"></div><span>$121,005</span></div>
+      <div class="bar-container"><span class="bar-label">Analytics Engineering</span><div class="bar" style="width:67.6%;background:#a7f3d0;"></div><span>$111,400</span></div>
+      <div class="bar-container"><span class="bar-label">Other Data</span><div class="bar" style="width:50.2%;background:#d1fae5;"></div><span>$82,740</span></div>
+      <div class="bar-container"><span class="bar-label">BI</span><div class="bar" style="width:50.2%;background:#d1fae5;"></div><span>$82,631</span></div>
+    </div>
+    <p style="margin-top: 12px; font-size: 12px; color: #64748b;">* 78 out of 1,242 records (6.3%) contain salary data</p>
+  </div>
+
+  <!-- Top Skills -->
+  <div class="card">
+    <h2>Top Skills in Demand</h2>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+      <div>
+        <div class="skill-bar"><span class="skill-name">Git</span><div class="skill-track"><div class="skill-fill" style="width:100%"></div></div><span class="skill-count">520</span></div>
+        <div class="skill-bar"><span class="skill-name">API</span><div class="skill-track"><div class="skill-fill" style="width:67.3%"></div></div><span class="skill-count">350</span></div>
+        <div class="skill-bar"><span class="skill-name">Excel</span><div class="skill-track"><div class="skill-fill" style="width:42.1%"></div></div><span class="skill-count">219</span></div>
+        <div class="skill-bar"><span class="skill-name">Communication</span><div class="skill-track"><div class="skill-fill" style="width:36.5%"></div></div><span class="skill-count">190</span></div>
+        <div class="skill-bar"><span class="skill-name">REST</span><div class="skill-track"><div class="skill-fill" style="width:31.5%"></div></div><span class="skill-count">164</span></div>
+        <div class="skill-bar"><span class="skill-name">SQL</span><div class="skill-track"><div class="skill-fill" style="width:22.7%"></div></div><span class="skill-count">118</span></div>
+        <div class="skill-bar"><span class="skill-name">Python</span><div class="skill-track"><div class="skill-fill" style="width:21.0%"></div></div><span class="skill-count">109</span></div>
+        <div class="skill-bar"><span class="skill-name">Agile</span><div class="skill-track"><div class="skill-fill" style="width:19.8%"></div></div><span class="skill-count">103</span></div>
+        <div class="skill-bar"><span class="skill-name">AWS</span><div class="skill-track"><div class="skill-fill" style="width:17.1%"></div></div><span class="skill-count">89</span></div>
+        <div class="skill-bar"><span class="skill-name">Dashboard</span><div class="skill-track"><div class="skill-fill" style="width:12.9%"></div></div><span class="skill-count">67</span></div>
+      </div>
+      <div>
+        <div class="skill-bar"><span class="skill-name">LLM</span><div class="skill-track"><div class="skill-fill" style="width:100%"></div></div><span class="skill-count">66</span></div>
+        <div class="skill-bar"><span class="skill-name">CI/CD</span><div class="skill-track"><div class="skill-fill" style="width:89.4%"></div></div><span class="skill-count">59</span></div>
+        <div class="skill-bar"><span class="skill-name">Azure</span><div class="skill-track"><div class="skill-fill" style="width:80.3%"></div></div><span class="skill-count">53</span></div>
+        <div class="skill-bar"><span class="skill-name">Linux</span><div class="skill-track"><div class="skill-fill" style="width:71.2%"></div></div><span class="skill-count">47</span></div>
+        <div class="skill-bar"><span class="skill-name">Docker</span><div class="skill-track"><div class="skill-fill" style="width:56.1%"></div></div><span class="skill-count">37</span></div>
+        <div class="skill-bar"><span class="skill-name">Kubernetes</span><div class="skill-track"><div class="skill-fill" style="width:54.5%"></div></div><span class="skill-count">36</span></div>
+        <div class="skill-bar"><span class="skill-name">Power BI</span><div class="skill-track"><div class="skill-fill" style="width:54.5%"></div></div><span class="skill-count">36</span></div>
+        <div class="skill-bar"><span class="skill-name">GCP</span><div class="skill-track"><div class="skill-fill" style="width:50.0%"></div></div><span class="skill-count">33</span></div>
+        <div class="skill-bar"><span class="skill-name">Tableau</span><div class="skill-track"><div class="skill-fill" style="width:45.5%"></div></div><span class="skill-count">30</span></div>
+        <div class="skill-bar"><span class="skill-name">Machine Learning</span><div class="skill-track"><div class="skill-fill" style="width:43.9%"></div></div><span class="skill-count">29</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Quality -->
+  <div class="card">
+    <h2>Data Quality &amp; Validation</h2>
+    <div class="grid">
+      <div class="stat"><div class="stat-value" style="color:#22c55e;">PASS</div><div class="stat-label">Schema Validation</div></div>
+      <div class="stat"><div class="stat-value" style="color:#22c55e;">PASS</div><div class="stat-label">Remote Status Valid</div></div>
+      <div class="stat"><div class="stat-value">13.8%</div><div class="stat-label">Missing Dates</div></div>
+      <div class="stat"><div class="stat-value">6.3%</div><div class="stat-label">Salary Coverage</div></div>
+    </div>
+    <ul class="issues" style="margin-top: 12px; list-style: none;">
+      <li>0 records missing title in merged data</li>
+      <li>1,164 records without salary data (93.7%)</li>
+      <li>815 records without experience bracket (65.6%)</li>
+    </ul>
+  </div>
+
+  <p class="subtitle" style="text-align:center; margin-top: 32px;">
+    Generated: 2026-05-17 | Assignment 3 - Tools &amp; Techniques for Data Science
+  </p>
+</div>
+</body>
+</html>

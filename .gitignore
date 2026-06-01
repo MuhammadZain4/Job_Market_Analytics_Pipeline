@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs and output
+logs/
+output/
+*.log
+
+# Airflow
+airflow.db
+*.pid
+
+# VS Code
+.vscode/
+
+# Temporary
+*.swp
+*.tmp

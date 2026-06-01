@@ -1,0 +1,24 @@
+{
+  "total_jobs": 1242,
+  "pipeline_status": "Success",
+  "run_date": "2026-05-21 11:35:18.482658",
+  "jobs_by_source": {
+    "Arbeitnow": 983,
+    "Himalayas": 92,
+    "RemoteOK": 88,
+    "RemoteJobs.org": 79
+  },
+  "remote_ratio": {
+    "Remote": 1242
+  },
+  "experience_distribution": {
+    "Not mentioned": 815,
+    "8+": 207,
+    "5-8": 80,
+    "0-1": 74,
+    "3-5": 57,
+    "1-3": 9
+  },
+  "zero_to_one_year_jobs": 74,
+  "average_salary_usd": 113222.08
+}

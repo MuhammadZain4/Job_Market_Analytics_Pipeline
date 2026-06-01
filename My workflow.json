@@ -1,0 +1,71 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "job-market-alert",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c69e1d42-baae-44d0-a029-a73fe5a9af27",
+      "name": "Webhook",
+      "webhookId": "f1af4ba1-856a-49d2-b492-867a9658f61e"
+    },
+    {
+      "parameters": {
+        "sendTo": "zainyt123@gmail.com",
+        "subject": "🚀 Job Market Pipeline Analytics Summary",
+        "emailType": "text",
+        "message": "=Assalam-o-Alaikum,  Job Market Analytics Pipeline has executed successfully!  ------------------------------------------ 📊 PIPELINE METRICS SUMMARY: ------------------------------------------ - Total Jobs Extracted: {{ $json.body.total_jobs }} - Average Salary (USD): ${{ $json.body.average_salary_usd }} - Pipeline Status: {{ $json.body.pipeline_status }} - Execution Date: {{ $json.body.run_date }} ------------------------------------------  Regards, Muhammad Zain Data Science Pipeline Automation",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "06a45bb9-8e08-4ca1-9620-9d588cba5416",
+      "name": "Send a message",
+      "webhookId": "3d831c46-48e2-4925-896c-6904f09c92c2",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "6Qm4lOkLG8lK2pqO",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "49175f34-7cf6-4a42-aa2b-b25a44407307",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4ba5ab89314eb2fb9df092d0f33a3055251dcadd62290ff40002a611c3e20896"
+  },
+  "id": "tmqEAz9oVAMf8qpH",
+  "tags": []
+}
